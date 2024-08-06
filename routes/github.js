@@ -5,47 +5,6 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 
 require('dotenv').config();
 
-const getGithubProfile = async (username) => {
-  try {
-    const res = await axios.get(`https://api.github.com/users/${username}`);
-    return res.data;
-  } catch (err) {
-    console.error(`Failed to get Github profile: ${err}. Status code: ${err.response.status}`);
-    return null;
-  }
-};
-
-const getGithubRepos = async (username) => {
-  try {
-    const res = await axios.get(`https://api.github.com/users/${username}/repos`);
-    const repos = res.data.map((repo) => ({
-      url: repo.url,
-      stargazers_count: repo.stargazers_count,
-      watchers_count: repo.watchers_count,
-      language: repo.language,
-      forks_count: repo.forks_count,
-      open_issues_count: repo.open_issues_count,
-      forks: repo.forks,
-    }));
-
-    return repos;
-  } catch (err) {
-    console.error(`Failed to get Github repos: ${err}. Status code: ${err.response.status}`);
-    return null;
-  }
-};
-
-const getGithubReadme = async (username) => {
-  try {
-    const res = await axios.get(
-      `https://raw.githubusercontent.com/${username}/${username}/main/README.md`
-    );
-    return res.data;
-  } catch (err) {
-    console.error(`Failed to get Github README: ${err}. Status code: ${err.response.status}`);
-  }
-};
-
 const runGenerativeAI = async (profileData, readmeData, reposData) => {
   const apiKey = process.env.GEMINI_API_KEY;
   const genAI = new GoogleGenerativeAI(apiKey);
@@ -116,10 +75,7 @@ const runGenerativeAI = async (profileData, readmeData, reposData) => {
 };
 
 router.post('/roast', async (req, res) => {
-  const username = req.body.username;
-  const profileData = await getGithubProfile(username);
-  const reposData = await getGithubRepos(username);
-  const readmeData = await getGithubReadme(username);
+  const { profileData, reposData, readmeData } = req.body;
 
   if (profileData && reposData) {
     try {

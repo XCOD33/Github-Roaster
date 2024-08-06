@@ -23,6 +23,35 @@
     <div id="result"></div>
 
     <script>
+      const getGithubProfile = async (username) => {
+        const res = await fetch(`https://api.github.com/users/${username}`);
+        if (!res.ok) throw new Error('Failed to fetch GitHub profile');
+        return res.json();
+      };
+
+      const getGithubRepos = async (username) => {
+        const res = await fetch(`https://api.github.com/users/${username}/repos`);
+        if (!res.ok) throw new Error('Failed to fetch GitHub README');
+        const repos = await res.json();
+        return repos.map((repo) => ({
+          url: repo.url,
+          stargazers_count: repo.stargazers_count,
+          watchers_count: repo.watchers_count,
+          language: repo.language,
+          forks_count: repo.forks_count,
+          open_issues_count: repo.open_issues_count,
+          forks: repo.forks,
+        }));
+      };
+
+      const getGithubReadme = async (username) => {
+        const res = await fetch(
+          `https://raw.githubusercontent.com/${username}/${username}/main/README.md`
+        );
+        if (!res.ok) throw new Error('Failed to fetch GitHub README');
+        return res.text();
+      };
+
       document.getElementById('roastForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // Mencegah reload halaman
 
@@ -34,12 +63,16 @@
         resultElement.innerText = '';
 
         try {
+          const profileData = await getGithubProfile(username);
+          const reposData = await getGithubRepos(username);
+          const readmeData = await getGithubReadme(username);
+
           const response = await fetch('/github/roast', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username }),
+            body: JSON.stringify({ profileData, reposData, readmeData }),
           });
 
           if (!response.ok) {
