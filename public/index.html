@@ -48,7 +48,6 @@
         const res = await fetch(
           `https://raw.githubusercontent.com/${username}/${username}/main/README.md`
         );
-        if (!res.ok) throw new Error('Failed to fetch GitHub README');
         return res.text();
       };
 
