@@ -6,7 +6,7 @@ Aplikasi ini bertujuan untuk menghasilkan "roasting" atau kritik tajam terhadap 
 2. **Menggunakan Google Generative AI**: Data yang diambil kemudian dikirim ke model generatif dari Google untuk menghasilkan teks roasting.
 3. **Menampilkan Hasil Roasting**: Hasil roasting yang dihasilkan oleh AI kemudian ditampilkkan kepada pengguna.
 
-**Live Demo**: [https://gh-roasting.github.com/](https://gh-roasting.github.com/)
+**Live Demo**: [https://gh-roast.ricoaditya.my.id/](https://gh-roast.ricoaditya.my.id/)
 
 ## Instalasi
 
