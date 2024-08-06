@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParses = require('body-parser');
+const bodyParser = require('body-parser');
 const path = require('path');
 const githubRoutes = require('./routes/github');
 const cors = require('cors');
