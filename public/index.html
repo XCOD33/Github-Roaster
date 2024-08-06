@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Roaster</title>
+    <style>
+      #loading {
+        display: none;
+        font-size: 18px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GitHub Roaster</h1>
+    <form id="roastForm">
+      <label for="username">GitHub Username:</label>
+      <input type="text" id="username" name="username" required />
+      <button type="submit">Roast</button>
+    </form>
+    <div id="loading">Loading...</div>
+    <div id="result"></div>
+
+    <script>
+      document.getElementById('roastForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Mencegah reload halaman
+
+        const username = document.getElementById('username').value;
+        const loadingElement = document.getElementById('loading');
+        const resultElement = document.getElementById('result');
+
+        loadingElement.style.display = 'block';
+        resultElement.innerText = '';
+
+        try {
+          const response = await fetch('/github/roast', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Jaringan bermasalah');
+          }
+
+          const result = await response.text();
+          console.log('Response received:', result); // Debugging response
+          resultElement.innerText = result;
+        } catch (error) {
+          console.error('Gagal mengirim permintaan:', error);
+          resultElement.innerText = 'Gagal mendapatkan roasting.';
+        } finally {
+          loadingElement.style.display = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>
